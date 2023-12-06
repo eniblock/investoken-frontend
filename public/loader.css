@@ -56,6 +56,20 @@ html {
   transition: all 0.3s ease;
 }
 
+.loading-logo {
+  font-size: 28px;
+  font-family: "Public Sans", sans-serif, -apple-system, blinkmacsystemfont,
+    "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol";
+  font-weight: bold;
+  line-height: normal !important;
+  color: black;
+}
+
+.loading-logo > span {
+  color: var(--initial-loader-color);
+}
+
 @keyframes rotate {
   0% {
     transform: rotate(0deg);

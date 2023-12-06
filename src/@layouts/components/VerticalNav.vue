@@ -58,7 +58,7 @@ const handleNavScroll = (evt: Event) => {
           class="app-logo d-flex align-center gap-x-3 app-title-wrapper"
         >
           <h1 class="leading-normal">
-            INVESTOKEN
+            INVES<span>TOKEN</span>
           </h1>
         </RouterLink>
       </slot>

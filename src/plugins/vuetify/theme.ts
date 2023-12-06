@@ -1,6 +1,6 @@
 import type { VuetifyOptions } from 'vuetify'
 
-export const staticPrimaryColor = '#696CFF'
+export const staticPrimaryColor = '#089FAA'
 
 const theme: VuetifyOptions['theme'] = {
   defaultTheme: 'light',
@@ -8,7 +8,7 @@ const theme: VuetifyOptions['theme'] = {
     light: {
       dark: false,
       colors: {
-        'primary': '#696CFF',
+        'primary': '#089FAA',
         'on-primary': '#fff',
         'secondary': '#8592A3',
         'on-secondary': '#fff',
@@ -57,7 +57,7 @@ const theme: VuetifyOptions['theme'] = {
     dark: {
       dark: true,
       colors: {
-        'primary': '#696CFF',
+        'primary': '#089FAA',
         'on-primary': '#fff',
         'secondary': '#8592A3',
         'on-secondary': '#fff',
