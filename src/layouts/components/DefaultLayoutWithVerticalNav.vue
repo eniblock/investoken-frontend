@@ -7,6 +7,7 @@ import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 
 // Components
+import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
 import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
@@ -49,11 +50,18 @@ const upgradeBanner = computed(() => {
           to: '/',
         }"
       />
+
+      <!-- 👉 Administration -->
+      <VerticalNavSectionTitle
+        :item="{
+          heading: 'Administration',
+        }"
+      />
       <VerticalNavLink
         :item="{
-          title: 'Account Settings',
+          title: 'Users',
           icon: 'mdi-account-cog-outline',
-          to: '/account-settings',
+          to: '/users',
         }"
       />
     </template>
