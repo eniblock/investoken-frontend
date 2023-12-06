@@ -1,3 +1,4 @@
+import { authGuard } from '@auth0/auth0-vue'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
@@ -6,6 +7,7 @@ const router = createRouter({
     {
       path: '/',
       component: () => import('../layouts/default.vue'),
+      beforeEnter: authGuard,
       children: [
         {
           path: '/',

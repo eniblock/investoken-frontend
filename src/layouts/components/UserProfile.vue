@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import avatar1 from '@images/avatars/avatar-1.png'
+import { useAuth0 } from '@auth0/auth0-vue'
+
+const { user, logout } = useAuth0()
+
+const logoutReturnTo = () => {
+  logout({ logoutParams: { returnTo: window.location.origin } })
+}
 </script>
 
 <template>
@@ -16,7 +22,7 @@ import avatar1 from '@images/avatars/avatar-1.png'
       color="primary"
       variant="tonal"
     >
-      <VImg :src="avatar1" />
+      <VImg :src="user?.picture" />
 
       <!-- SECTION Menu -->
       <VMenu
@@ -41,21 +47,21 @@ import avatar1 from '@images/avatars/avatar-1.png'
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="avatar1" />
+                    <VImg :src="user?.picture" />
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{ user?.name }}
             </VListItemTitle>
             <VListItemSubtitle>Admin</VListItemSubtitle>
           </VListItem>
           <VDivider class="my-2" />
 
           <!-- 👉 Logout -->
-          <VListItem to="/">
+          <VListItem @click="logoutReturnTo">
             <template #prepend>
               <VIcon
                 class="me-2"

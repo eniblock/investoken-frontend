@@ -12,6 +12,7 @@
     "postinstall": "npm run build:icons"
   },
   "dependencies": {
+    "@auth0/auth0-vue": "^2.3.2",
     "@casl/ability": "^6.2.0",
     "@casl/vue": "^2.2.0",
     "@floating-ui/dom": "1.2.8",
