@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { ThemeSwitcherTheme } from '@layouts/types';
-import { useTheme } from 'vuetify';
+import { useTheme } from 'vuetify'
+import type { ThemeSwitcherTheme } from '@layouts/types'
 
 const props = defineProps<{
   themes: ThemeSwitcherTheme[]
@@ -16,6 +16,7 @@ const changeTheme = () => {
 // Update icon if theme is changed from other sources
 watch(() => globalTheme.name.value, val => {
   currentThemeName.value = val
+  localStorage.setItem('theme', JSON.stringify(val))
 })
 </script>
 

@@ -2,8 +2,14 @@ import type { VuetifyOptions } from 'vuetify'
 
 export const staticPrimaryColor = '#089FAA'
 
+let defaultTheme = 'light'
+const storedTheme = localStorage.getItem('theme')
+
+if (storedTheme)
+  defaultTheme = JSON.parse(storedTheme)
+
 const theme: VuetifyOptions['theme'] = {
-  defaultTheme: 'light',
+  defaultTheme,
   themes: {
     light: {
       dark: false,
