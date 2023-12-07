@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { useAuth0 } from '@auth0/auth0-vue'
+import { hasRole } from '@/plugins/user'
 
 const { user, logout } = useAuth0()
+const adminRole = import.meta.env.VITE_AUTH0_CLAIM_ROLES_ADMIN
+const isAdmin = hasRole(user, adminRole)
 
 const logoutReturnTo = () => {
   logout({ logoutParams: { returnTo: window.location.origin } })
@@ -56,7 +59,9 @@ const logoutReturnTo = () => {
             <VListItemTitle class="font-weight-semibold">
               {{ user?.name }}
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle v-if="isAdmin">
+              {{ adminRole }}
+            </VListItemSubtitle>
           </VListItem>
           <VDivider class="my-2" />
 
