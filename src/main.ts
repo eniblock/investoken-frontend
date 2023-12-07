@@ -6,10 +6,12 @@ import { loadFonts } from '@/plugins/webfontloader'
 import router from '@/router'
 import { createAuth0 } from '@auth0/auth0-vue'
 import '@core/scss/template/index.scss'
+import { GoogleDrive } from '@eniblock/sdk'
 import '@layouts/styles/index.scss'
 import '@styles/styles.scss'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
+import eniblock from './plugins/eniblock'
 
 loadFonts()
 
@@ -30,6 +32,11 @@ app.use(
     },
   }),
 )
+app.use(eniblock, {
+  appId: import.meta.env.VITE_ENIBLOCK_APP_ID,
+  accessTokenProvider: () => app.config.globalProperties.$auth0.getAccessTokenSilently(),
+  storageItems: [{ alias: import.meta.env.VITE_ENIBLOCK_ALIAS, storage: new GoogleDrive(import.meta.env.VITE_ENIBLOCK_GAPI_CLIENT_ID) }],
+})
 
 // Mount vue app
 app.mount('#app')

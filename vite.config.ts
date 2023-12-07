@@ -1,9 +1,10 @@
+import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import { fileURLToPath } from 'node:url'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { defineConfig } from 'vite'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import vuetify from 'vite-plugin-vuetify'
 
 // https://vitejs.dev/config/
@@ -28,6 +29,8 @@ export default defineConfig({
       imports: ['vue', 'vue-router', '@vueuse/core', '@vueuse/math', 'pinia'],
       vueTemplate: true,
     }),
+
+    nodePolyfills(),
   ],
   define: { 'process.env': {} },
   resolve: {
