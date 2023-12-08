@@ -11,6 +11,8 @@ import '@layouts/styles/index.scss'
 import '@styles/styles.scss'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
+import type { IntlNumberFormats } from 'vue-i18n'
+import { createI18n } from 'vue-i18n'
 import eniblock from './plugins/eniblock'
 
 loadFonts()
@@ -37,6 +39,25 @@ app.use(eniblock, {
   accessTokenProvider: () => app.config.globalProperties.$auth0.getAccessTokenSilently(),
   storageItems: [{ alias: import.meta.env.VITE_ENIBLOCK_ALIAS, storage: new GoogleDrive(import.meta.env.VITE_ENIBLOCK_GAPI_CLIENT_ID) }],
 })
+
+const numberFormats: IntlNumberFormats = {
+  en: {
+    currency: {
+      style: 'currency', currency: 'EUR', notation: 'standard',
+    },
+    decimal: {
+      style: 'decimal', minimumFractionDigits: 2, maximumFractionDigits: 2,
+    },
+    compact: {
+      style: 'decimal', notation: 'compact', minimumFractionDigits: 0, maximumFractionDigits: 0,
+    },
+    percent: {
+      style: 'percent', useGrouping: false,
+    },
+  },
+}
+
+app.use(createI18n({ numberFormats }))
 
 // Mount vue app
 app.mount('#app')
