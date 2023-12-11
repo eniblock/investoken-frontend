@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { VSkeletonLoader } from 'vuetify/labs/VSkeletonLoader'
 import Dashboard from '@/layouts/components/Dashboard.vue'
+import DashboardSkeleton from '@/layouts/components/DashboardSkeleton.vue'
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import Dashboard from '@/layouts/components/Dashboard.vue'
       <Dashboard />
     </template>
     <template #fallback>
-      <VSkeletonLoader type="card" />
+      <DashboardSkeleton />
     </template>
   </Suspense>
 </template>

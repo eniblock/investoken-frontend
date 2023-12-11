@@ -1,16 +1,31 @@
 <script setup lang="ts">
+import { ethers } from 'ethers'
+import { useRoute } from 'vue-router'
+import ERC20 from '@/assets/abi/ERC20.json'
 import { useEniblock } from '@/plugins/eniblock'
 import investoken from '@images/svg/investoken.svg'
 
-const amount = 12345
-const supply = 12345667.12
-let balance = 0
+const route = useRoute()
+
+let amount = 0
+let tokenBalance = 0
+let totalSupply = 0
+let symbol: string
+let name: string
+let contractAddress: string
+const tokenPrice = 123.45
+
+if (route.query.token)
+  contractAddress = route.query.token.toString()
+
+else
+  contractAddress = '0x0000000000000000000000000000000000001010'
+
+console.log(contractAddress)
 
 const sdk = useEniblock()
 
 if (sdk) {
-  // await sdk.wallet.destroy()
-
   const wallet = await sdk.wallet.instantiate()
 
   console.log(wallet)
@@ -23,12 +38,21 @@ if (sdk) {
 
   console.log(await account.getTokensBalance())
 
-  const tokens = await sdk.utils.getTokensBalance(await account.getAddress(), ['0x0000000000000000000000000000000000001010'])
+  const tokens = await sdk.utils.getTokensBalance(await account.getAddress(), [contractAddress])
 
-  balance = tokens[0].balance.toNumber()
+  if (tokens.length > 0) {
+    tokenBalance = tokens[0].balance.toNumber()
+    amount = tokens[0].balance.multipliedBy(tokenPrice).toNumber()
+  }
+
+  const provider = await sdk.getProvider()
+  const contract = new ethers.Contract(contractAddress, ERC20, provider)
+
+  totalSupply = Number(ethers.utils.formatUnits((await contract.totalSupply()), await contract.decimals()))
+
+  symbol = await contract.symbol()
+  name = await contract.name()
 }
-
-const loading = true
 </script>
 
 <template>
@@ -49,7 +73,7 @@ const loading = true
               rounded="0"
               :image="investoken"
             />
-            Investoken
+            {{ name }}
           </p>
         </VCol>
       </VRow>
@@ -71,7 +95,7 @@ const loading = true
           md="3"
         >
           <CardStatisticsVertical
-            :stats="$n(balance, 'decimal').concat(' ITVK')"
+            :stats="$n(tokenBalance, 'decimal').concat(` ${symbol}`)"
             title="Token Balance"
             icon="bx-circle-three-quarter"
           />
@@ -82,7 +106,7 @@ const loading = true
           md="3"
         >
           <CardStatisticsVertical
-            :stats="$n(amount, 'currency')"
+            :stats="$n(tokenPrice, 'currency')"
             title="Token Price"
             icon="bx-euro"
           />
@@ -93,8 +117,8 @@ const loading = true
           md="3"
         >
           <CardStatisticsVertical
-            :stats="$n(supply, 'compact')"
-            title="Circulating supply"
+            :stats="$n(totalSupply, 'compact')"
+            title="Total supply"
             icon="bx-transfer"
           />
         </VCol>
