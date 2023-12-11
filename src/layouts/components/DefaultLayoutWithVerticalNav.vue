@@ -67,7 +67,7 @@ const upgradeBanner = computed(() => {
     </template>
 
     <!-- 👉 Pages -->
-    <Suspense><slot /></Suspense>
+    <slot />
 
     <!-- 👉 Footer -->
     <template #footer>
