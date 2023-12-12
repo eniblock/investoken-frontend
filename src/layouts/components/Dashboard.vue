@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { useAuth0 } from '@auth0/auth0-vue'
+import axios from 'axios'
 import { ethers } from 'ethers'
 import { useRoute } from 'vue-router'
-import ERC20 from '@/assets/abi/ERC20.json'
-import { useEniblock } from '@/plugins/eniblock'
 import investoken from '@images/svg/investoken.svg'
+import { useEniblock } from '@/plugins/eniblock'
+import ERC20 from '@/assets/abi/ERC20.json'
 
 const route = useRoute()
 
@@ -21,24 +23,15 @@ if (route.query.token)
 else
   contractAddress = '0x0000000000000000000000000000000000001010'
 
-console.log(contractAddress)
-
 const sdk = useEniblock()
+const { getAccessTokenSilently, user } = useAuth0()
 
 if (sdk) {
   const wallet = await sdk.wallet.instantiate()
-
-  console.log(wallet)
-
   const account = await wallet.account.instantiate(import.meta.env.VITE_ENIBLOCK_ACCOUNT)
-
-  console.log(account)
-
-  console.log(await account.getAddress())
-
-  console.log(await account.getTokensBalance())
-
-  const tokens = await sdk.utils.getTokensBalance(await account.getAddress(), [contractAddress])
+  const walletAddress = await account.getAddress()
+  const tokens = await sdk.utils.getTokensBalance(walletAddress, [contractAddress])
+  const accessToken = await getAccessTokenSilently()
 
   if (tokens.length > 0) {
     tokenBalance = tokens[0].balance.toNumber()
@@ -49,9 +42,25 @@ if (sdk) {
   const contract = new ethers.Contract(contractAddress, ERC20, provider)
 
   totalSupply = Number(ethers.utils.formatUnits((await contract.totalSupply()), await contract.decimals()))
-
   symbol = await contract.symbol()
   name = await contract.name()
+
+  if (user.value) {
+    const metadata = user.value[import.meta.env.VITE_AUTH0_CLAIM_METADATA]
+
+    if (!metadata.wallet || metadata.wallet !== walletAddress) {
+      axios.patch('/.netlify/functions/wallets',
+        {
+          wallet: walletAddress,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
+    }
+  }
 }
 </script>
 
