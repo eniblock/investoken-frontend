@@ -1,7 +1,7 @@
 import process from 'node:process'
 import type { HandlerContext, HandlerEvent } from '@netlify/functions'
 import { NetlifyJwtVerifier } from '@serverless-jwt/netlify'
-import type { GetUsers200ResponseOneOfInner } from 'auth0'
+import type { GetUsers200ResponseOneOf } from 'auth0'
 import { ManagementClient } from 'auth0'
 import dotenv from 'dotenv'
 
@@ -46,7 +46,7 @@ const handler = verifyJwt(async (event: HandlerEvent, context: HandlerContext) =
       sort = event.queryStringParameters.sort
   }
 
-  let users: GetUsers200ResponseOneOfInner[] = []
+  let users: GetUsers200ResponseOneOf
 
   try {
     users = (await management.users.getAll({
@@ -54,9 +54,8 @@ const handler = verifyJwt(async (event: HandlerEvent, context: HandlerContext) =
       per_page: itemsPerPage,
       page,
       sort,
+      include_totals: true,
     })).data
-
-    console.log(users)
   }
   catch {
     return {
