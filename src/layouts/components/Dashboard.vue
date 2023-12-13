@@ -27,10 +27,33 @@ const sdk = useEniblock()
 const { getAccessTokenSilently, user } = useAuth0()
 
 if (sdk) {
-  const wallet = await sdk.wallet.instantiate()
-  const account = await wallet.account.instantiate(import.meta.env.VITE_ENIBLOCK_ACCOUNT)
-  const walletAddress = await account.getAddress()
   const accessToken = await getAccessTokenSilently()
+  let walletAddress
+
+  if (user.value) {
+    const metadata = user.value[import.meta.env.VITE_AUTH0_CLAIM_METADATA]
+
+    if (metadata.wallet) {
+      walletAddress = metadata.wallet
+    }
+    else {
+      const wallet = await sdk.wallet.instantiate()
+      const account = await wallet.account.instantiate(import.meta.env.VITE_ENIBLOCK_ACCOUNT)
+
+      walletAddress = await account.getAddress()
+
+      axios.patch('/.netlify/functions/wallets',
+        {
+          wallet: walletAddress,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      )
+    }
+  }
 
   const provider = new ethers.providers.JsonRpcBatchProvider((await sdk.getProvider()).connection)
   const contract = new ethers.Contract(contractAddress, ERC20, provider)
@@ -50,23 +73,6 @@ if (sdk) {
   name = result[3]
   tokenBalance = Number(ethers.utils.formatUnits(result[4], result[1]))
   amount = tokenBalance * tokenPrice
-
-  if (user.value) {
-    const metadata = user.value[import.meta.env.VITE_AUTH0_CLAIM_METADATA]
-
-    if (!metadata.wallet || metadata.wallet !== walletAddress) {
-      axios.patch('/.netlify/functions/wallets',
-        {
-          wallet: walletAddress,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      )
-    }
-  }
 }
 </script>
 

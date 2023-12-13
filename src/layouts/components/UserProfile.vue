@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { useAuth0 } from '@auth0/auth0-vue'
-import { hasRole } from '@/plugins/user'
+import { hasRole } from '@/plugins/user';
+import { useAuth0 } from '@auth0/auth0-vue';
 
 const { user, logout } = useAuth0()
 const adminRole = import.meta.env.VITE_AUTH0_CLAIM_ROLES_ADMIN
@@ -25,7 +25,10 @@ const logoutReturnTo = () => {
       color="primary"
       variant="tonal"
     >
-      <VImg :src="user?.picture" />
+      <VImg
+        referrerpolicy="no-referrer"
+        :src="user?.picture"
+      />
 
       <!-- SECTION Menu -->
       <VMenu
@@ -50,7 +53,10 @@ const logoutReturnTo = () => {
                     color="primary"
                     variant="tonal"
                   >
-                    <VImg :src="user?.picture" />
+                    <VImg
+                      referrerpolicy="no-referrer"
+                      :src="user?.picture"
+                    />
                   </VAvatar>
                 </VBadge>
               </VListItemAction>
