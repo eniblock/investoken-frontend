@@ -30,20 +30,26 @@ if (sdk) {
   const wallet = await sdk.wallet.instantiate()
   const account = await wallet.account.instantiate(import.meta.env.VITE_ENIBLOCK_ACCOUNT)
   const walletAddress = await account.getAddress()
-  const tokens = await sdk.utils.getTokensBalance(walletAddress, [contractAddress])
   const accessToken = await getAccessTokenSilently()
 
-  if (tokens.length > 0) {
-    tokenBalance = tokens[0].balance.toNumber()
-    amount = tokens[0].balance.multipliedBy(tokenPrice).toNumber()
-  }
-
-  const provider = await sdk.getProvider()
+  const provider = new ethers.providers.JsonRpcBatchProvider((await sdk.getProvider()).connection)
   const contract = new ethers.Contract(contractAddress, ERC20, provider)
 
-  totalSupply = Number(ethers.utils.formatUnits((await contract.totalSupply()), await contract.decimals()))
-  symbol = await contract.symbol()
-  name = await contract.name()
+  const promises = []
+
+  promises.push(contract.totalSupply())
+  promises.push(contract.decimals())
+  promises.push(contract.symbol())
+  promises.push(contract.name())
+  promises.push(contract.balanceOf(walletAddress))
+
+  const result = await Promise.all(promises)
+
+  totalSupply = Number(ethers.utils.formatUnits(result[0], result[1]))
+  symbol = result[2]
+  name = result[3]
+  tokenBalance = Number(ethers.utils.formatUnits(result[4], result[1]))
+  amount = tokenBalance * tokenPrice
 
   if (user.value) {
     const metadata = user.value[import.meta.env.VITE_AUTH0_CLAIM_METADATA]
