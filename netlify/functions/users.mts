@@ -31,12 +31,32 @@ const handler = verifyJwt(async (event: HandlerEvent, context: HandlerContext) =
     }
   }
 
+  let itemsPerPage = 5
+  let page = 0
+  let sort = 'created_at:-1'
+
+  if (event.queryStringParameters) {
+    if (event.queryStringParameters.itemsPerPage)
+      itemsPerPage = Number(event.queryStringParameters.itemsPerPage)
+
+    if (event.queryStringParameters.page)
+      page = Number(event.queryStringParameters.page) - 1
+
+    if (event.queryStringParameters.sort)
+      sort = event.queryStringParameters.sort
+  }
+
   let users: GetUsers200ResponseOneOfInner[] = []
 
   try {
     users = (await management.users.getAll({
-      fields: 'user_id,given_name,family_name,email,user_metadata',
+      fields: 'user_id,name,email,user_metadata,created_at',
+      per_page: itemsPerPage,
+      page,
+      sort,
     })).data
+
+    console.log(users)
   }
   catch {
     return {

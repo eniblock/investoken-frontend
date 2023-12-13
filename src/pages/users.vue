@@ -79,11 +79,10 @@ const FakeAPI = {
 const itemsPerPage = ref(5)
 
 const headers = ref([
-  { title: 'Id', key: 'id', align: 'start' },
-  { title: 'Type', key: 'type', align: 'end' },
+  { title: 'Name', key: 'name', align: 'end' },
   { title: 'Email', key: 'email', align: 'end' },
-  { title: 'Browser', key: 'browser', align: 'end' },
-  { title: 'App', key: 'app', align: 'end' },
+  { title: 'Wallet', key: 'user_metadata.wallet', align: 'end' },
+  { title: 'Created at', key: 'created_at', align: 'end' },
 ])
 
 const search = ref('')
@@ -96,18 +95,28 @@ const { getAccessTokenSilently } = useAuth0()
 async function loadItems({ page, itemsPerPage, sortBy }) {
   const accessToken = await getAccessTokenSilently()
 
-  axios.get('/.netlify/functions/users',
+  let sort = null
+
+  if (sortBy.length)
+    sort = `${sortBy[0].key}:${sortBy[0].order === 'desc' ? '-1' : '1'}`
+
+  loading.value = true
+  await axios.get('/.netlify/functions/users',
     {
+      params: {
+        page,
+        itemsPerPage,
+        sort,
+      },
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
     },
-  )
+  ).then(result => {
+    console.log(result.data)
 
-  loading.value = true
-  FakeAPI.fetch({ page, itemsPerPage, sortBy }).then(({ items, total }) => {
-    serverItems.value = items
-    totalItems.value = total
+    serverItems.value = result.data
+    totalItems.value = 6 // todo
     loading.value = false
   })
 }
