@@ -1,15 +1,19 @@
 <script lang="ts" setup>
 import { useAuth0 } from '@auth0/auth0-vue'
+import { useClipboard } from '@vueuse/core'
 import axios from 'axios'
+import truncateEthAddress from 'truncate-eth-address'
 import { VDataTableServer } from 'vuetify/labs/VDataTable'
+
+const { copy } = useClipboard()
 
 type Headers = InstanceType<typeof VDataTableServer>['headers']
 
 const headers: Headers = [
-  { title: 'Name', key: 'name', align: 'end' },
-  { title: 'Email', key: 'email', align: 'end' },
-  { title: 'Wallet', key: 'user_metadata.wallet', align: 'end' },
-  { title: 'Created at', key: 'created_at', align: 'end' },
+  { title: 'Name', key: 'name', align: 'start' },
+  { title: 'Email', key: 'email' },
+  { title: 'Wallet', key: 'user_metadata.wallet' },
+  { title: 'Created at', key: 'created_at' },
 ]
 
 const itemsPerPage = ref(5)
@@ -69,6 +73,17 @@ async function loadUsers(params: LoadUsersParams) {
     >
       <template #item.created_at="{ item }">
         <span>{{ new Date(item.columns.created_at).toLocaleString() }}</span>
+      </template>
+      <template #item.user_metadata.wallet="{ item }">
+        <span v-if="item.columns['user_metadata.wallet']">
+          {{ truncateEthAddress(item.columns['user_metadata.wallet']) }}
+          <VBtn
+            variant="plain"
+            size="small"
+            icon="bx-copy"
+            @click="copy(item.columns['user_metadata.wallet'])"
+          />
+        </span>
       </template>
     </VDataTableServer>
   </VCard>
