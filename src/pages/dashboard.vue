@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import Dashboard from '@/layouts/components/Dashboard.vue'
-import DashboardSkeleton from '@/layouts/components/DashboardSkeleton.vue'
+import Dashboard from '@/views/dashboard/Dashboard.vue'
+import DashboardSkeleton from '@/views/dashboard/DashboardSkeleton.vue'
 </script>
 
 <template>
