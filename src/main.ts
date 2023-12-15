@@ -3,7 +3,7 @@ import '@/@iconify/icons-bundle'
 import App from '@/App.vue'
 import vuetify from '@/plugins/vuetify'
 import { loadFonts } from '@/plugins/webfontloader'
-import router from '@/router'
+import createRouter from '@/router'
 import { createAuth0 } from '@auth0/auth0-vue'
 import '@core/scss/template/index.scss'
 import { GoogleDrive, NetworkEnum } from '@eniblock/sdk'
@@ -23,7 +23,7 @@ const app = createApp(App)
 // Use plugins
 app.use(vuetify)
 app.use(createPinia())
-app.use(router)
+app.use(createRouter(app))
 app.use(
   createAuth0({
     domain: import.meta.env.VITE_AUTH0_DOMAIN,

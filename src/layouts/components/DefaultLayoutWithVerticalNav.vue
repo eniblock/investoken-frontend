@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import { useTheme } from 'vuetify'
-
-import upgradeBannerDark from '@images/pro/upgrade-banner-dark.png'
-import upgradeBannerLight from '@images/pro/upgrade-banner-light.png'
+import { useAuth0 } from '@auth0/auth0-vue'
 import VerticalNavLayout from '@layouts/components/VerticalNavLayout.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 
@@ -12,13 +9,14 @@ import Footer from '@/layouts/components/Footer.vue'
 import NavbarThemeSwitcher from '@/layouts/components/NavbarThemeSwitcher.vue'
 import UserProfile from '@/layouts/components/UserProfile.vue'
 
-// Banner
+const { isAuthenticated, user } = useAuth0()
 
-const vuetifyTheme = useTheme()
+function hasRole(role: string) {
+  if (user.value && user.value[import.meta.env.VITE_AUTH0_CLAIM_ROLES])
+    return user.value[import.meta.env.VITE_AUTH0_CLAIM_ROLES][0] === role
 
-const upgradeBanner = computed(() => {
-  return vuetifyTheme.global.name.value === 'light' ? upgradeBannerLight : upgradeBannerDark
-})
+  return false
+}
 </script>
 
 <template>
@@ -53,11 +51,13 @@ const upgradeBanner = computed(() => {
 
       <!-- 👉 Administration -->
       <VerticalNavSectionTitle
+        v-if="isAuthenticated && hasRole('Admin')"
         :item="{
           heading: 'Administration',
         }"
       />
       <VerticalNavLink
+        v-if="isAuthenticated && hasRole('Admin')"
         :item="{
           title: 'Users',
           icon: 'mdi-account-cog-outline',

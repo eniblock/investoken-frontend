@@ -31,6 +31,12 @@ const handler = verifyJwt(async (event: HandlerEvent, context: HandlerContext) =
     }
   }
 
+  if (!context.clientContext.user.permissions.includes('read:users')) {
+    return {
+      statusCode: 403,
+    }
+  }
+
   let itemsPerPage = 5
   let page = 0
   let sort = 'created_at:-1'
