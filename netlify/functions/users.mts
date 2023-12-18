@@ -30,7 +30,7 @@ const handler = verifyJwt(async (event: HandlerEvent, context: HandlerContext) =
       statusCode: 403,
     }
   }
-
+  console.log(context.clientContext.user)
   if (!context.clientContext.user.permissions.includes('read:users')) {
     return {
       statusCode: 403,
