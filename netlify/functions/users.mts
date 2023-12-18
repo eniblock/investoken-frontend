@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { HandlerContext, HandlerEvent } from '@netlify/functions'
+import type { HandlerEvent } from '@netlify/functions'
 import { NetlifyJwtVerifier } from '@serverless-jwt/netlify'
 import type { GetUsers200ResponseOneOf } from 'auth0'
 import { ManagementClient } from 'auth0'
@@ -18,20 +18,20 @@ const management = new ManagementClient({
   clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET || '',
 })
 
-const handler = verifyJwt(async (event: HandlerEvent, context: HandlerContext) => {
+const handler = verifyJwt(async (event: HandlerEvent, context) => {
   if (event.httpMethod !== 'GET') {
     return {
       statusCode: 405,
     }
   }
 
-  if (!context.clientContext) {
+  if (!context.identityContext) {
     return {
       statusCode: 403,
     }
   }
-  console.log(context)
-  if (!context.clientContext.user.permissions.includes('read:users')) {
+
+  if (!context.identityContext.claims.permissions.includes('read:users')) {
     return {
       statusCode: 403,
     }
