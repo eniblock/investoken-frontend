@@ -1,5 +1,5 @@
 import process from 'node:process'
-import type { Handler, HandlerContext, HandlerEvent } from '@netlify/functions'
+import type { Handler, HandlerEvent } from '@netlify/functions'
 import { NetlifyJwtVerifier } from '@serverless-jwt/netlify'
 import { ManagementClient } from 'auth0'
 import dotenv from 'dotenv'
@@ -17,14 +17,14 @@ const management = new ManagementClient({
   clientSecret: process.env.AUTH0_MANAGEMENT_CLIENT_SECRET || '',
 })
 
-const handler: Handler = verifyJwt(async (event: HandlerEvent, context: HandlerContext) => {
+const handler: Handler = verifyJwt(async (event: HandlerEvent, context) => {
   if (event.httpMethod !== 'PATCH') {
     return {
       statusCode: 405,
     }
   }
 
-  if (!context.clientContext) {
+  if (!context.identityContext) {
     return {
       statusCode: 403,
     }
@@ -54,7 +54,7 @@ const handler: Handler = verifyJwt(async (event: HandlerEvent, context: HandlerC
   }
 
   try {
-    await management.users.update({ id: context.clientContext.user.sub }, {
+    await management.users.update({ id: context.identityContext.claims.sub }, {
       user_metadata: {
         wallet: metadata.wallet,
       },
