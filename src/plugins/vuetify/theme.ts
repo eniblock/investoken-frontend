@@ -41,6 +41,7 @@ const theme: VuetifyOptions['theme'] = {
         'perfect-scrollbar-thumb': '#DBDADE',
         'skin-bordered-background': '#fff',
         'skin-bordered-surface': '#fff',
+        'logo': '#000',
       },
 
       variables: {
@@ -91,6 +92,7 @@ const theme: VuetifyOptions['theme'] = {
         'perfect-scrollbar-thumb': '#4A5072',
         'skin-bordered-background': '#2b2c40',
         'skin-bordered-surface': '#2b2c40',
+        'logo': '#DBDBEB',
       },
       variables: {
         'code-color': '#d400ff',

@@ -13,7 +13,7 @@ html {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: var(--initial-loader-bg, #fff);
+  background: var(--initial-loader-bg, #F5F5F9);
   block-size: 100%;
   gap: 1rem 0;
   inline-size: 100%;
@@ -36,7 +36,7 @@ html {
   border: 3px solid transparent;
   border-radius: 50%;
   block-size: 100%;
-  border-inline-start: 3px solid var(--initial-loader-color, #eee);
+  border-inline-start: 3px solid #089FAA;
   inline-size: 100%;
 }
 
@@ -63,11 +63,11 @@ html {
     "Segoe UI Emoji", "Segoe UI Symbol";
   font-weight: bold;
   line-height: normal !important;
-  color: black;
+  color: var(--initial-loader-color, black);
 }
 
 .loading-logo > span {
-  color: var(--initial-loader-color);
+  color: #089FAA;
 }
 
 @keyframes rotate {

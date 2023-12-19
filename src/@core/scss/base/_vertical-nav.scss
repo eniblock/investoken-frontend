@@ -33,6 +33,10 @@
         flex-shrink: 0;
         transition: transform 0.25s ease-in-out;
 
+        h1 {
+          color: rgb(var(--v-theme-logo));
+        }
+
         span {
           color: rgb(var(--v-theme-primary));
         }
