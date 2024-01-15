@@ -64,6 +64,14 @@ function hasRole(role: string) {
           to: '/users',
         }"
       />
+      <VerticalNavLink
+        v-if="isAuthenticated && hasRole('Admin')"
+        :item="{
+          title: 'Token',
+          icon: 'bx-cog',
+          to: '/token',
+        }"
+      />
     </template>
 
     <!-- 👉 Pages -->

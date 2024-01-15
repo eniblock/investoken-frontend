@@ -15,7 +15,7 @@ let totalSupply = 0
 let symbol: string
 let name: string
 let contractAddress: string
-const tokenPrice = 123.45
+let tokenPrice = 0
 
 if (route.query.token)
   contractAddress = route.query.token.toString()
@@ -54,6 +54,14 @@ if (sdk) {
       )
     }
   }
+
+  tokenPrice = (await axios.get('/.netlify/functions/tokenPrice',
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  )).data
 
   const provider = new ethers.providers.JsonRpcBatchProvider((await sdk.getProvider()).connection)
   const contract = new ethers.Contract(contractAddress, ERC20, provider)

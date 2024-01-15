@@ -22,6 +22,11 @@ export default function createRouter(app: App): Router {
             component: () => import('../pages/users.vue'),
             beforeEnter: createAuthRoleGuard(app),
           },
+          {
+            path: 'token',
+            component: () => import('../pages/token.vue'),
+            beforeEnter: createAuthRoleGuard(app),
+          },
         ],
       },
     ],
