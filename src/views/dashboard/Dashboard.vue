@@ -21,7 +21,7 @@ if (route.query.token)
   contractAddress = route.query.token.toString()
 
 else
-  contractAddress = '0x0000000000000000000000000000000000001010'
+  contractAddress = '0x6a2dc510ed1fd68dff8f3bc25b8c9a80ddcdc5ac'
 
 const sdk = useEniblock()
 const { getAccessTokenSilently, user } = useAuth0()
@@ -55,15 +55,7 @@ if (sdk) {
     }
   }
 
-  tokenPrice = (await axios.get('/.netlify/functions/tokenPrice',
-    {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    },
-  )).data
-
-  const provider = new ethers.providers.JsonRpcBatchProvider((await sdk.getProvider()).connection)
+  const provider = new ethers.providers.JsonRpcBatchProvider(import.meta.env.VITE_PROVIDER_RPC_URL)
   const contract = new ethers.Contract(contractAddress, ERC20, provider)
 
   const promises = []
@@ -73,9 +65,17 @@ if (sdk) {
   promises.push(contract.symbol())
   promises.push(contract.name())
   promises.push(contract.balanceOf(walletAddress))
+  promises.push(await axios.get('/.netlify/functions/tokenPrice',
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  ))
 
   const result = await Promise.all(promises)
 
+  tokenPrice = result[5].data
   totalSupply = Number(ethers.utils.formatUnits(result[0], result[1]))
   symbol = result[2]
   name = result[3]
@@ -112,7 +112,6 @@ if (sdk) {
           md="3"
         >
           <CardStatisticsVertical
-            v-if="amount"
             :stats="$n(amount, 'currency')"
             title="Amount"
             icon="bx-wallet"

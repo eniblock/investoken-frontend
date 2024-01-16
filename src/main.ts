@@ -35,7 +35,7 @@ app.use(
   }),
 )
 app.use(eniblock, {
-  network: NetworkEnum.POLYGON_TESTNET_MUMBAI,
+  network: NetworkEnum.POLYGON_MAINNET,
   appId: import.meta.env.VITE_ENIBLOCK_APP_ID,
   accessTokenProvider: () => app.config.globalProperties.$auth0.getAccessTokenSilently(),
   storageItems: [{ alias: import.meta.env.VITE_ENIBLOCK_ALIAS, storage: new GoogleDrive(import.meta.env.VITE_ENIBLOCK_GAPI_CLIENT_ID) }],
